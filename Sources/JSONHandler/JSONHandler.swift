@@ -8,7 +8,7 @@
 import SwiftUI
 
 public class JSONHandler {
-    public static func parseJSON<T: Codable>(_ json: Data, using: T.Type, catchHandler: ((Error) -> ())? = nil) -> T? {
+    public static func parseJSON<T: Decodable>(_ json: Data, using: T.Type, catchHandler: ((Error) -> ())? = nil) -> T? {
         do {
             return try JSONDecoder().decode(T.self, from: json)
         } catch {
