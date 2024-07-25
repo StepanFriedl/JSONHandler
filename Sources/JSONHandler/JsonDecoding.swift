@@ -8,13 +8,13 @@
 import Foundation
 
 extension KeyedDecodingContainer {
-    public static func decode<KeyType: CodingKey, T: Decodable>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, type: T.Type, catchHandler: ((Error) -> Void)? = nil) -> T? {
+    public static func decode<KeyType: CodingKey, T: Decodable>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, type: T.Type, catchHandler: ((Error, String, String) -> Void)? = nil) -> T? {
          if container.contains(key) {
               do {
                   return try container.decode(type.self, forKey: key)
               } catch {
                   if let catchHandler = catchHandler {
-                      catchHandler(error)
+                      catchHandler(error, "\(T.self)", "\(key)")
                   }
                    return nil
               }
@@ -23,7 +23,7 @@ extension KeyedDecodingContainer {
          }
     }
     
-    public static func decodeInt<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error) -> Void)? = nil) -> Int? {
+    public static func decodeInt<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error, String, String) -> Void)? = nil, callerClassName: String? = nil) -> Int? {
          if container.contains(key) {
               do {
                    if let integerString = try? container.decode(String.self, forKey: key),
@@ -34,7 +34,7 @@ extension KeyedDecodingContainer {
                    }
               } catch {
                   if let catchHandler = catchHandler {
-                      catchHandler(error)
+                      catchHandler(error, callerClassName ?? "unknown class", "\(key)")
                   }
                    return nil
               }
@@ -43,7 +43,7 @@ extension KeyedDecodingContainer {
          }
     }
     
-    public static func decodeDouble<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error) -> Void)? = nil) -> Double? {
+    public static func decodeDouble<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error, String, String) -> Void)? = nil, callerClassName: String? = nil) -> Double? {
          if container.contains(key) {
               do {
                    if let doubleString = try? container.decode(String.self, forKey: key),
@@ -54,7 +54,7 @@ extension KeyedDecodingContainer {
                    }
               } catch {
                   if let catchHandler = catchHandler {
-                      catchHandler(error)
+                      catchHandler(error, callerClassName ?? "unknown class", "\(key)")
                   }
                    return nil
               }
@@ -63,7 +63,7 @@ extension KeyedDecodingContainer {
          }
     }
     
-    public static func decodeString<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error) -> Void)? = nil) -> String? {
+    public static func decodeString<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error, String, String) -> Void)? = nil, callerClassName: String? = nil) -> String? {
         if container.contains(key) {
             if let string = try? container.decode(String.self, forKey: key) {
                 return string
@@ -76,7 +76,7 @@ extension KeyedDecodingContainer {
             } else {
                 let error = DecodeStringError.typeMismatch(key)
                 if let catchHandler = catchHandler {
-                    catchHandler(error)
+                    catchHandler(error, callerClassName ?? "unknown class", "\(key)")
                 }
                 return nil
             }
@@ -85,7 +85,7 @@ extension KeyedDecodingContainer {
          }
     }
     
-    public static func decodeBool<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error) -> Void)? = nil) -> Bool? {
+    public static func decodeBool<KeyType: CodingKey>(container: KeyedDecodingContainer<KeyType>, forKey key: KeyType, catchHandler: ((Error, String, String) -> Void)? = nil, callerClassName: String? = nil) -> Bool? {
          if container.contains(key) {
               do {
                    if let boolString = try? container.decode(String.self, forKey: key),
@@ -96,7 +96,7 @@ extension KeyedDecodingContainer {
                    }
               } catch {
                   if let catchHandler = catchHandler {
-                      catchHandler(error)
+                      catchHandler(error, callerClassName ?? "unknown class", "\(key)")
                   }
                    return nil
               }
