@@ -17,7 +17,7 @@ public class JSONHandler {
         }
     }
     
-    public static func encodeJSON<T: Codable>(_ request: T, catchHandler: ((Error) -> Void)? = nil) -> String? {
+    public static func encodeJSON<T: Encodable>(_ request: T, catchHandler: ((Error) -> Void)? = nil) -> String? {
         do {
             return String(data: try JSONEncoder().encode(request), encoding: .utf8)
         } catch {
